@@ -90,12 +90,12 @@ server.post('/api/v1/users', async (req, res) => {
 server.patch('/api/v1/users/:userId', async (req, res) => {
   // Получаем новые данные
   const newData = req.body
-  // Получаем ID пользователя
+  // Получаем id пользователя
   const { userId } = req.params
   // Получаем массив пользователей
   const users = await readUsersFile()
   // Перебираем массив. Если id элемента соответствует полученному id
-  // - обновляем элемент.
+  // - обновляем элемент
   for (let i = 0; i < users.length; i += 1) {
     if (users[i].id === +userId) {
       users[i] = { ...users[i], ...newData }
@@ -108,13 +108,13 @@ server.patch('/api/v1/users/:userId', async (req, res) => {
 }) // Read/Write
 
 server.delete('/api/v1/users/:userId', async (req, res) => {
-  // Получаем ID пользователя
+  // Получаем id пользователя
   const { userId } = req.params
-  // Получаем массив из файла users.json функцией readFile()
+  // Получаем массив пользователей
   let users = await readUsersFile()
-  // Удаляем элемент из массива с помощью метода filter()
+  // Удаляем элемент из массива
   users = users.filter((rec) => rec.id !== +userId)
-  // Сохраняем файл функцией saveFile(), передав новый массив
+  // Сохраняем файл
   saveUsersFile(users)
   // Возврадаем статус
   res.json({ status: 'SUCCESS', id: userId })
