@@ -70,13 +70,33 @@ server.get('/api/v1/users', async (req, res) => {
   res.json(users)
 }) // Read
 
+// server.post('/api/v1/users', async (req, res) => {
+//   // Получаем нового пользователя
+//   const newUser = req.body
+//   // Получаем массив из файла users.json функцией readFile()
+//   let users = await readUsersFile()
+//   // Присваиваем новому пользователю следующий ID
+//   newUser.id = users.length + 1
+//   // Добавляем элемент в массив с помощью оператора spread или функции concat()
+//   users = [...users, newUser]
+//   // Сохраняем файл функцией saveFile(), передав новый массив
+//   saveUsersFile(users)
+//   // Возврадаем статус
+//   res.json({ status: 'SUCCESS', id: newUser.id })
+// }) // Read/Write
+
 server.post('/api/v1/users', async (req, res) => {
   // Получаем нового пользователя
   const newUser = req.body
   // Получаем массив из файла users.json функцией readFile()
   let users = await readUsersFile()
-  // Присваиваем новому пользователю следующий ID
-  newUser.id = users.length + 1
+  // Находим максимальный id и присваиваем новому пользователю следующий id
+  let maxId = 0
+  users.map((rec) => {
+    if (maxId < rec.id) maxId = rec.id
+    return maxId
+  })
+  newUser.id = maxId + 1
   // Добавляем элемент в массив с помощью оператора spread или функции concat()
   users = [...users, newUser]
   // Сохраняем файл функцией saveFile(), передав новый массив
