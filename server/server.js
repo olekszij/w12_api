@@ -70,21 +70,6 @@ server.get('/api/v1/users', async (req, res) => {
   res.json(users)
 }) // Read
 
-// server.post('/api/v1/users', async (req, res) => {
-//   // Получаем нового пользователя
-//   const newUser = req.body
-//   // Получаем массив из файла users.json функцией readFile()
-//   let users = await readUsersFile()
-//   // Присваиваем новому пользователю следующий ID
-//   newUser.id = users.length + 1
-//   // Добавляем элемент в массив с помощью оператора spread или функции concat()
-//   users = [...users, newUser]
-//   // Сохраняем файл функцией saveFile(), передав новый массив
-//   saveUsersFile(users)
-//   // Возврадаем статус
-//   res.json({ status: 'SUCCESS', id: newUser.id })
-// }) // Read/Write
-
 server.post('/api/v1/users', async (req, res) => {
   // Получаем нового пользователя
   const newUser = req.body
@@ -105,6 +90,34 @@ server.post('/api/v1/users', async (req, res) => {
   res.json({ status: 'SUCCESS', id: newUser.id })
 }) // Read/Write
 
+// server.patch('/api/v1/users/:userId', async (req, res) => {
+//   // Получаем нового пользователя
+//   const newData = req.body
+//   // Получаем ID пользователя
+//   const { userId } = req.params
+//   // Получаем массив из файла users.json функцией readFile()
+//   const users = await readUsersFile()
+//   // Методом map() или reduce() перебираем элементы массива.
+//   // Если ID элемента соответствует полученному ID - обновляем элемент,
+//   // в противном случае оставляем исходный элемент.
+//   // Для проверки элемента можно воспользоваться условием:
+//   // rec.id === +userId
+//   users.map((rec) => {
+//     if (rec.id === +userId) {
+//       Object.keys(newData).map((field) => {
+//         // eslint-disable-next-line no-param-reassign
+//         rec[field] = newData[field]
+//         return rec
+//       })
+//     }
+//     return users
+//   })
+//   // Сохраняем файл функцией saveFile(), передав новый массив
+//   saveUsersFile(users)
+//   // Возврадаем статус
+//   res.json({ status: 'SUCCESS', id: userId })
+// }) // Read/Write
+
 server.patch('/api/v1/users/:userId', async (req, res) => {
   // Получаем нового пользователя
   const newData = req.body
@@ -117,16 +130,24 @@ server.patch('/api/v1/users/:userId', async (req, res) => {
   // в противном случае оставляем исходный элемент.
   // Для проверки элемента можно воспользоваться условием:
   // rec.id === +userId
-  users.map((rec) => {
-    if (rec.id === +userId) {
-      Object.keys(newData).map((field) => {
-        // eslint-disable-next-line no-param-reassign
-        rec[field] = newData[field]
-        return rec
-      })
+
+  // users.map((rec) => {
+  //   if (rec.id === +userId) {
+  //     Object.keys(newData).map((field) => {
+  //       // eslint-disable-next-line no-param-reassign
+  //       rec[field] = newData[field]
+  //       return rec
+  //     })
+  //   }
+  //   return users
+  // })
+
+  for (let i = 0; i < users.length; i += 1) {
+    if (users[i].id === +userId) {
+      users[i] = { ...users[i], ...newData }
     }
-    return users
-  })
+  }
+
   // Сохраняем файл функцией saveFile(), передав новый массив
   saveUsersFile(users)
   // Возврадаем статус
@@ -148,7 +169,7 @@ server.delete('/api/v1/users/:userId', async (req, res) => {
 
 server.delete('/api/v1/users', async (req, res) => {
   await unlink(`${__dirname}/users.json`)
-  res.json()
+  res.json({ status: 'SUCCESS' })
 }) // Write
 
 server.use('/api/', (req, res) => {
