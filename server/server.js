@@ -70,30 +70,10 @@ server.get('/api/v1/users', async (req, res) => {
   res.json(users)
 }) // Read
 
-// server.post('/api/v1/users', async (req, res) => {
-//   // Получаем нового пользователя
-//   const newUser = req.body
-//   // Получаем массив из файла users.json функцией readFile()
-//   let users = await readUsersFile()
-//   // Находим максимальный id и присваиваем новому пользователю следующий id
-//   let maxId = 0
-//   users.map((rec) => {
-//     if (maxId < rec.id) maxId = rec.id
-//     return maxId
-//   })
-//   newUser.id = maxId + 1
-//   // Добавляем элемент в массив с помощью оператора spread или функции concat()
-//   users = [...users, newUser]
-//   // Сохраняем файл функцией saveFile(), передав новый массив
-//   saveUsersFile(users)
-//   // Возврадаем статус
-//   res.json({ status: 'SUCCESS', id: newUser.id })
-// }) // Read/Write
-
 server.post('/api/v1/users', async (req, res) => {
   // Получаем нового пользователя
   const newUser = req.body
-  // Получаем массив из файла users.json функцией readFile()
+  // Получаем массив пользователей
   const users = await readUsersFile()
   // Находим максимальный id и присваиваем новому пользователю следующий id
   let maxId = 0
@@ -101,44 +81,27 @@ server.post('/api/v1/users', async (req, res) => {
     if (maxId < user.id) maxId = user.id
   })
   newUser.id = maxId + 1
-  // Добавляем элемент в массив с помощью оператора spread или функции concat()
-  // и сохраняем файл функцией saveFile()
+  // Добавляем элемент в массив и сохраняем файл
   saveUsersFile([...users, newUser])
-  // Возврадаем статус
+  // Возвращаем статус
   res.json({ status: 'SUCCESS', id: newUser.id })
 }) // Read/Write
 
 server.patch('/api/v1/users/:userId', async (req, res) => {
-  // Получаем нового пользователя
+  // Получаем новые данные
   const newData = req.body
   // Получаем ID пользователя
   const { userId } = req.params
-  // Получаем массив из файла users.json функцией readFile()
+  // Получаем массив пользователей
   const users = await readUsersFile()
-  // Методом map() или reduce() перебираем элементы массива.
-  // Если ID элемента соответствует полученному ID - обновляем элемент,
-  // в противном случае оставляем исходный элемент.
-  // Для проверки элемента можно воспользоваться условием:
-  // rec.id === +userId
-
-  // users.map((rec) => {
-  //   if (rec.id === +userId) {
-  //     Object.keys(newData).map((field) => {
-  //       // eslint-disable-next-line no-param-reassign
-  //       rec[field] = newData[field]
-  //       return rec
-  //     })
-  //   }
-  //   return users
-  // })
-
+  // Перебираем массив. Если id элемента соответствует полученному id
+  // - обновляем элемент.
   for (let i = 0; i < users.length; i += 1) {
     if (users[i].id === +userId) {
       users[i] = { ...users[i], ...newData }
     }
   }
-
-  // Сохраняем файл функцией saveFile(), передав новый массив
+  // Сохраняем файл
   saveUsersFile(users)
   // Возврадаем статус
   res.json({ status: 'SUCCESS', id: userId })
