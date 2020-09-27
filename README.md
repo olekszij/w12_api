@@ -2,7 +2,7 @@
 
 API REST Test:
 
-<code>get /api/v1/users</code> - obtener datos de usuarios del fichero <em>users.json</em>. Si no existe, obtenerles <a href="https://jsonplaceholder.typicode.com/users" target="_blank">del URL</a>, rellenar el fichero <em>users.json</a> con los datos recibidos y devolverles.
+<code>get /api/v1/users</code> - obtener datos de usuarios del fichero <em>users.json</em>. Si no existe, obtenerles <a href="https://jsonplaceholder.typicode.com/users">del URL</a>, rellenar el fichero <em>users.json</em> con los datos recibidos y devolverles.
 
 <code>post /api/v1/users</code> - añadir un usuario nuevo al fichero <em>users.json</em> con <em>id</em> que equivale al <em>id</em> del último usuario aumentado en 1. Devolver estado <em>{ status: 'SUCCESS', id: id }</em>.
 
@@ -14,4 +14,4 @@ API REST Test:
 
 # Online Demo
 
-<a href="https://w12-api.herokuapp.com/" target="_blank">https://w12-api.herokuapp.com/</a>
+<a href="https://w12-api.herokuapp.com/">https://w12-api.herokuapp.com/</a>
